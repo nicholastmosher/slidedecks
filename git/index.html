@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Title</title>
+		<meta charset="utf-8">
+		<style>
+			@import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+			@import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+			@import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+			body, p {
+				font-family: 'Roboto';
+				font-size: 1em;
+			}
+			h1, h2, h3 {
+				font-family: 'Ubuntu';
+				font-weight: normal;
+			}
+			.remark-code, .remark-inline-code {
+				font-family: 'Ubuntu Mono';
+			}
+			.left-column {
+				color #777;
+				width: 40%;
+				height: 92%;
+				float: left;
+			}
+			.left-column h2:last-of-type, .left-column h3:last-child {
+				color: #000;
+			}
+			.right-column {
+				width: 60%;
+				float: right;
+				padding-top: 1em;
+			}
+		</style>
+	</head>
+	<body>
+		<textarea id="source">
+
+			class: center, middle
+
+			# What is Git?
+
+			---
+
+			## Git is a **Version Control System**
+
+			Version control systems help to manage projects by keeping track
+			of their history. Changes to a project managed by a VCS are called
+			*"commits"*, and mark distinct points in history.
+
+			<img src="assets/commit_diagram.png" style="height:50%;width:50%;"/>
+
+			---
+
+			## Reporitories
+
+			In most VCS tools, commits and other information are stored in a
+			*repository*. In git, the actual repository is stored in the
+			`.git/` subdirectory of your project. You shouldn't manually edit
+			anything in `.git/` unless you know what you're doing; the `git`
+			command manages that folder for us.
+
+			<img src="assets/repository_diagram.png" style="height:50%;width:50%;"/>
+
+			---
+
+			## Working Directory
+
+			Your working directory is where all of your project's files go.
+			Your `.git/` repository lives inside your working directory, as
+			a sibling to your project files.
+
+			```bash
+			...
+			my_project/          # Working directory for my_project/
+				.git/            # Repository
+				src/             # Project files
+				README.md        # Project files
+				...              # Project files
+			another_project/     # Working directory for another_project/
+			...
+			```
+
+			---
+
+			## Basic Commands
+
+			A typical workflow with git involves the following commands:
+
+			```bash
+			# Info Gathering
+			git status               # Prints the status of the local repo
+			git diff                 # Prints all changes since last commit
+			git branch               # Prints a list of local branches
+			git remote               # Prints a list of known remote repos
+			git log                  # Prints a history of commits
+
+			# Basic Operations
+			git init                 # Initializes a new empty repository
+			git clone                # Copies an existing git repo
+			git add                  # Stages changes from working directory
+			git commit               # Commits staged changes
+			git push                 # Pushes commits to a remote repo
+			git pull                 # Fetches and merges commits from a remote repo
+
+			# Harder Operations
+			git checkout             # Switch to a local or remote branch
+			git fetch                # Downloads commits from a remote repo
+			git merge                # Merges specified branch into current branch
+
+			# Advanced Operations
+			git revert               # Adds a commit that undoes a previous commit
+			git reset                # Moves the HEAD reference
+			git rebase               # Combines branches/commits without merging
+			```
+
+			---
+
+			## First project
+
+			To initialize a new git repo, navigate to a new directory and
+			type `git init`.
+
+			```bash
+			~$ mkdir project/
+			~$ cd project/
+			~/project$ git init
+			```
+
+			Congratulations, you now have a clean git repository. You can see
+			it by typing `ls -la`, and check its status with `git status`.
+
+			```bash
+			~/project$ ls -la
+			drwxrwxr-x  7 nick nick 4096 Jul  5 23:38 .git
+			```
+
+			```bash
+			~/project$ git status
+			On branch master
+
+			Initial commit
+
+			nothing to commit (create/copy files and use "git add" to track)
+			```
+
+			---
+
+			## Making some changes
+
+			In order to make use of your repo, we need to make some changes to
+			the working directory. Let's create a new file with some text.
+
+			```bash
+			~/project$ echo "Hello, World" > hello.txt
+			```
+
+			Now if we look at our status, we'll see that git has found the new
+			file.
+
+			```bash
+			~/project$ git status
+			On branch master
+
+			Initial commit
+
+			Untracked files:
+			  (use "git add <file>..." to include in what will be committed)
+
+			      hello.txt
+
+			nothing added to commit but untracked files present (use "git add" to track)
+			```
+
+			Untracked files are ones which git can see, but which are not part
+			of the repository as of the latest commit.
+
+			---
+
+			## Visualization
+
+			<img src="assets/Diagrams/round2/Git1.png"/>
+
+			---
+
+			## Staging changes
+
+			Before commiting files and changes to git's repository, we have
+			to *stage* those changes. We do this using `git add`. There are
+			several ways you can specify the files to change.
+
+			```bash
+			~/project$ git add hello.txt    # Stages only hello.txt
+			~/project$ git add ./           # Stages all files in the current directory
+			~/project$ git add -A           # Stages all files
+			```
+
+			Now if we look at our status, we'll see that the file has been
+			successfully staged.
+
+			```bash
+			~/project$ git status
+			On branch master
+
+			Initial commit
+
+			Changes to be committed:
+			  (use "git rm --cached <file>..." to unstage)
+
+			      new file:  hello.txt
+			```
+
+			---
+
+			## Visualization
+
+			<img src="assets/Diagrams/round2/Git2.png"/>
+
+			---
+
+			## Git tracks changes, not files
+
+			An important concept to understand about git is that git only cares
+			about changes to the working directory. When we staged `hello.txt`,
+			we told git to acknowledge the changes to `hello.txt` up to that
+			point. Namely, that it had been created and had the contents
+			"Hello, World". If we change the contents of the file while it's
+			staged, then git will recognize that as a unique change.
+
+			```bash
+			~/project$ echo "Goodbye, World" > hello.txt
+			~/project$ git status
+			On branch master
+
+			Initial commit
+
+			Changes to be committed:
+			  (use "git rm --cached <file>..." to unstage)
+
+			      new file:  hello.txt
+
+			Changes not staged for commit:
+			  (use "git add <file>..." to update what will be committed)
+			  (use "git checkout -- <file>..." to discard changes in working directory)
+
+			      modified:  hello.txt
+			```
+
+			---
+
+			## Using `git diff` to identify changes
+
+			When editing project files, it's important to keep track of what
+			you've changed. Git keeps track of which files have been changed,
+			as well as which lines in those files have been added and deleted.
+			Git diff can be told to compare between commits, files, and branches,
+			as well as to look at staged vs unstaged changes. By default,
+			`git diff` will show all unstaged changes.
+
+			```bash
+			~/project$ git diff
+			diff --git a/hello.txt b/hello.txt
+			index 3fa0d4b..db102ae 100644
+			--- a/hello.txt
+			+++ b/hello.txt
+			@@ -1 +1 @@
+			-Hello, World
+			+Goodbye, World
+			```
+
+			If we want to take a look at staged changes, we can use
+			`git diff --staged`.
+
+			```bash
+			~/project$ git diff --staged
+			diff --git a/hello.txt b/hello.txt
+			new file mode 100644
+			index 0000000..3fa0d4b
+			--- /dev/null
+			+++ b/hello.txt
+			@@ -0,0 +1 @@
+			+Hello, World
+			```
+
+			---
+
+			## Commit your first changes
+
+			Since we have some changes in the staging area, we can commit those
+			changes to git's history.
+
+			```bash
+			~/project$ git commit -m "This is my first git commit."
+			[master (root-commit) f2db78b] This is my first git comit.
+			 1 file changed, 1 insertion(+)
+			 create mode 100644 hello.txt
+			```
+
+			Note: The `-m` flag on the commit command indicates that you want
+			to write your commit message inline.
+
+			---
+
+			## Visualization
+
+			<img src="assets/Diagrams/round2/Git6.png"/>
+
+		</textarea>
+		<script src="assets/remark-latest.min.js"></script>
+		<script>
+			var slideshow = remark.create();
+		</script>
+	</body>
+</html>
