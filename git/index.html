@@ -6,10 +6,11 @@
 		<style>
 			@import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
 			@import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+			@import url(https://fonts.googleapis.com/css?family=Ubuntu:400,700,400italic);
 			@import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
 
 			body, p {
-				font-family: 'Roboto';
+				font-family: 'Ubuntu';
 				font-size: 1em;
 			}
 			h1, h2, h3 {
@@ -18,6 +19,7 @@
 			}
 			.remark-code, .remark-inline-code {
 				font-family: 'Ubuntu Mono';
+				background: #DDD;
 			}
 			.left-column {
 				color #777;
@@ -179,8 +181,6 @@
 
 			---
 
-			## Visualization
-
 			<img src="assets/Diagrams/round2/Git1.png"/>
 
 			---
@@ -213,8 +213,6 @@
 			```
 
 			---
-
-			## Visualization
 
 			<img src="assets/Diagrams/round2/Git2.png"/>
 
@@ -250,6 +248,10 @@
 
 			---
 
+			<img src="assets/Diagrams/round2/Git5.png"/>
+
+			---
+
 			## Using `git diff` to identify changes
 
 			When editing project files, it's important to keep track of what
@@ -273,17 +275,6 @@
 			If we want to take a look at staged changes, we can use
 			`git diff --staged`.
 
-			```bash
-			~/project$ git diff --staged
-			diff --git a/hello.txt b/hello.txt
-			new file mode 100644
-			index 0000000..3fa0d4b
-			--- /dev/null
-			+++ b/hello.txt
-			@@ -0,0 +1 @@
-			+Hello, World
-			```
-
 			---
 
 			## Commit your first changes
@@ -303,9 +294,58 @@
 
 			---
 
-			## Visualization
-
 			<img src="assets/Diagrams/round2/Git6.png"/>
+
+			---
+
+			## Next Steps
+
+			Now that you know how to do basic adds and commits, it's time to
+			look at what makes a VCS truly useful - navigating through history.
+
+			First, let's look at how to manipulate the current working
+			directory and the latest commit. To do this, we'll be using
+			`git checkout` and `git reset`.
+
+			Additionally, we need to be aware of the status of the working
+			directory in order to know which commands to use to accomplish
+			what we want. We can do this by recognizing the different states
+			a file change can be in: `untracked`, `unstaged`, `staged` known
+			as being in the "Index"), and `committed`.
+
+			We won't deal much with untracked changes, since these aren't
+			version-controlled. They're only worth mentioning in order to
+			make a clear distinction between untracked and unstaged changes.
+
+			---
+
+			## Undoing staged and unstaged changes
+
+			Sometimes we add files to the staging area, then realize we don't
+			want them to be included in the next commit. We can remove them
+			from the staging area using `git reset HEAD <files>`.
+			This will cause the files to move from `staged` to `unstaged`.
+			Your files in the working directory will not be changed, they just
+			won't be included in the next `git commit`.
+
+			Other times, we make changes that we completely want to undo. We
+			can use `git checkout <files>` to remove changes from files and
+			restore them to the last commit. This will only work on unstaged
+			files, so if you want to undo staged changes, you must first use
+			`git reset HEAD <files>`. **Warning**: you can't undo this.
+
+			---
+
+			<img src="some image here"/>
+
+			---
+
+			## Using Branches
+
+			Branching is a means of isolating unrelated project changes. For
+			example, if you're writing a program with separate modules for UI
+			and backend, you can create a branch for each of those tasks so
+			they don't interfere with each other.
 
 		</textarea>
 		<script src="assets/remark-latest.min.js"></script>
