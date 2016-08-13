@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Title</title>
+		<meta charset="utf-8">
+		<style>
+			@import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+			@import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+			@import url(https://fonts.googleapis.com/css?family=Ubuntu:400,700,400italic);
+			@import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+			body {
+				font-family: 'Ubuntu';
+			}
+			h1, h2, h3 {
+				font-family: 'Ubuntu';
+				font-weight: normal;
+			}
+			.remark-code, .remark-inline-code, {
+				font-family: 'Ubuntu Mono';
+			}
+		</style>
+	</head>
+	<body>
+		<textarea id="source">
+
+			class: center, middle
+
+			# Linux Command-line Essentials
+
+			---
+
+			## Choose an environment
+
+			### Ubuntu and Fedora
+
+			Two popular and well supported linux distros, recommend
+			dual-booting one of them for full linux capabilities.
+
+			### Cygwin
+
+			Not actually a linux distro, but rather a Windows-based linux
+			compatibility platform. Workable, but might lack support for many
+			programs.
+
+			### Cloud 9
+
+			Online IDE with a fully-functional Ubuntu container environment.
+			Good for use from anywhere, but can only run command-line programs.
+
+			---
+
+			## What is the command line?
+
+			A command line may also be known as a `terminal` or a `shell`. It's
+			a program that executes other programs by interpreting commands.
+
+			### What can a command line do?
+
+			* Launch programs based on commands
+			* Interact with executing programs
+			* Print program output
+
+			There's a common theme in the *nix world, "everything is a file".
+			The most basic idea of a file is something that can take input and
+			give output (i.e. reading/writing to a hard drive, network device,
+			pipe, etc.). Linux shells are very good at manipulating files.
+
+			---
+
+			## Some basic commands
+
+			### Moving around the filesystem
+
+			```
+			cd               # Change directory
+			ls               # List
+			```
+
+			### Creating/deleting files and folders
+
+			```
+			touch <file>     # Creates an empty file
+			mkdir <dir>      # Creates an empty directory
+			rm <file>        # Removes a file or directory
+			mv <src> <dest>  # Moves a file or directory
+			cp <src> <dest>  # Copies a file or directory
+			```
+
+			### Data input/output routing commands
+
+			```
+			echo <something> # Prints arguments to standard out.
+			cat <file>       # Prints the contents of a file to standard out.
+			```
+
+			---
+
+			## Some shell operations
+
+			Linux shells have the ability to reroute program inputs and outputs,
+			meaning that once you get the hang of routing, you can do some
+			sicknasty combos.
+
+			```
+			<command> | <command>    # Pipe. Output of first command goes into second command.
+			<command> > <file>       # Right carat. Output of command goes into a file.
+			<command> >> <file>      # Double right carat. Appends output to a file.
+			<command> < <file>       # Left carat. Contents of file used as input to command.
+			```
+
+			Let's look at how we can use these symbols together with some of
+			the commands we saw earlier.
+
+			```
+			$ echo "Hello!"
+			  Hello
+			$ echo "Hello!" > hello.txt   # Writes "Hello!" to hello.txt
+			$ cat hello.txt
+			  Hello
+			$ echo "Goodbye" > hello.txt  # Writes "Goodbye" over hello.txt
+			$ cat hello.txt
+			  Goodbye
+			$ echo "forever" >> hello.txt # Appends "forever" to hello.txt
+			$ cat hello.txt
+			  Goodbye
+			  forever
+			```
+
+			---
+
+			## Some cooler programs
+
+			```
+			grep <string>    # Searches for the given string in standard input.
+			grep -r <string> <dir> # Searches for the string in any file in dir.
+			find <dir> -name <name> # Finds files of the given name in dir.
+			chmod
+			chown
+			pwd
+			uname
+			wget
+			```
+
+		</textarea>
+		<script src="assets/remark-latest.min.js">
+		</script>
+		<script>
+			var slideshow = remark.create();
+		</script>
+	</body>
+</html>
