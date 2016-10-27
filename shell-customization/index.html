@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Title</title>
+		<meta charset="utf-8">
+		<style>
+			@import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+			@import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+			@import url(https://fonts.googleapis.com/css?family=Ubuntu:400,700,400italic);
+			@import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+			body, p {
+				font-family: 'Ubuntu';
+				font-size: 1em;
+			}
+			h1, h2, h3 {
+				font-family: 'Ubuntu';
+				font-weight: normal;
+			}
+			.remark-code, .remark-inline-code {
+				font-family: 'Ubuntu Mono';
+				background: #DDD;
+			}
+			.left-column {
+				color #777;
+				width: 40%;
+				height: 92%;
+				float: left;
+			}
+			.left-column h2:last-of-type, .left-column h3:last-child {
+				color: #000;
+			}
+			.right-column {
+				width: 60%;
+				float: right;
+				padding-top: 1em;
+			}
+		</style>
+	</head>
+	<body>
+		<textarea id="source">
+
+			class: center, middle
+
+			# Customizing your Linux command line
+
+			---
+
+			# Role of the Shell
+
+			In linux, a shell is the program that interprets the commands you
+			type and figures out what to execute. Many or most modern Linux-
+			based operating systems assign `bash`, or the "Bourne-again shell"
+			as the default user shell.
+
+			### Common shells:
+
+			* `sh` - Shell. Minimal but nearly universal.
+			* `bash` - Bourne Again Shell. Basis for a lot of scripting.
+			* `fish` - A highly customizable shell but not bash compatible.
+			* `zsh` - Z shell. Fully bash-compatible and highly customizeable.
+
+			---
+
+			# Why customize the shell?
+
+			For many linux power users, the shell is the primary interface to
+			interact with the system. Certain operations or commands may feel
+			clunky to different people, or the visual feedback may not be easy
+			to read. These drawbacks can largely be aleviated by applying new
+			themes to a terminal or by creating keybindings, aliases, or
+			scripts.
+
+			* **Terminal**: The graphical program that interfaces with a shell.
+			* **Keybindings**: Key combinations that may execute commands or
+			alter the state of the terminal without typing the commands.
+			* **Aliases**: Binding a command input to transform to another
+			command before executing.
+			* **Scripts**: Programs that are interpreted by the shell and can
+			run other programs, manipulate input and output, etc.
+
+			---
+
+			# Aliasing
+
+			You can save a lot of time by just aliasing commands you frequently
+			use to shorter command strings. The format for creating an alias in
+			bash is `alias st="something"`.
+
+			### Some useful aliases
+
+			```bash
+			alias ls="ls --color"         # Make ls print in color.
+			alias sl="ls --color"         # Never lose time by misspelling "sl".
+			alias l="ls -lah --color"     # Print extra file info, also in color.
+			alias la="ls -lah --color"    # Print extra file info, also in color.
+			alias ld="ls -ldh */ --color" # Print only directories, also in color.
+			alias z="bg"                  # C-z pauses process, so z sends to background.
+			alias ..="cd ../"
+			alias ...="cd ../../"
+			alias ....="cd ../../../"
+			```
+
+			---
+
+			# Making aliases persist
+
+			Just typing the `alias` command will work, but it won't persist
+			past the current shell session. To make aliases apply to every
+			shell session, we can edit the shell's initialization script.
+			The init scripts are `~/.bashrc` for bash, `~/.zshrc` for zsh, and
+			`~/.fishrc` for fish.
+
+			One way to set up aliases is to create a `~/.alias` file, where
+			each line is one alias command. Then you'd configure your shell
+			init script to "source" that alias file, essenstially executing
+			it as a bash script in the current shell session.
+
+			```bash
+			# .bashrc or .zshrc
+
+			# Source ~/.alias if present
+			if [ -f $HOME/.alias ]; then
+				source $HOME/.alias
+			fi
+			```
+
+			---
+
+			# Creating a library of scripts
+
+			Often you'll find that you can make a script to make your life a
+			lot easier. If you set up a folder that you can just throw scripts
+			into, then they'll be globally executable from the command line.
+
+			Let's make that folder, as `~/bin`.
+
+			In order to tell the shell that it should look at `~/bin` to find
+			scripts or other executables, we have to add it to the PATH
+			environment variable. The command to do so is
+			`export PATH="$HOME/bin:$PATH"`
+
+			Again this has the problem of persistence. Just executing that line
+			in bash will only apply it to one session. Instead, we can put that
+			line in something like a `~/.path` file and source it as part of
+			our shell init.
+
+			```bash
+			# In .bashrc or .zshrc
+
+			# Source .path if present
+			if [ -f $HOME/.path ]; then
+				source $HOME/.path
+			fi
+			```
+
+			---
+
+			# Zsh
+
+			There are several reasons that many people prefer ZSH over bash,
+			including better tab completion, extensive plugin support, extra
+			themability, etc.
+
+			Below are some snapshots of my zsh prompt.
+
+			![Zsh snapshot](assets/zsh_blank.png)
+			![Zsh snapshot](assets/zsh_dir_and_git.png)
+
+			This uses the Agnoster theme from the oh-my-zsh plugin. Other
+			themes from oh-my-zsh can be found
+			[here](https://github.com/robbyrussell/oh-my-zsh/wiki/themes)
+
+			---
+
+			# Tmux
+
+			Tmux stands for "terminal multiplexer" and allows for one terminal
+			window to display several shell sessions, among other things. Tmux
+			can split one window into several panes, stack multiple windows in
+			a tabbed layout, or launch independent sessions.
+
+			Cool things to do with tmux:
+
+			* Detach/re-attach sessions (useful for sshing into servers)
+			* Use panes on the same window for related tasks.
+			* Use separate windows for less-related tasks.
+			* Use tmux socket files to place two users in the same terminal.
+
+			---
+
+			# Tmux panes example.
+
+			![Tmux example](assets/tmux_panes.png)
+
+			---
+
+			# SSH keys and configs
+
+			When SSHing into a remote machine, you either need to type your
+			user password, or you can opt to establish your identity using keys
+			instead.
+
+			SSH keys are cryptographic objects that exist in public/private
+			pairs, where the private key belongs to the client and the public
+			key is placed on a server. Cryptographically, the public key can
+			be derived from the private key, but not the other way around.
+
+			By placing a private key on your workstation and the matching
+			public key on a server, you can establish secure authentication
+			and remove the need to type your server password every time.
+
+			---
+
+			# Generating an SSH key pair
+
+			Github has a good set of articles on generating SSH keys, so we'll
+			defer there.
+
+			[https://help.github.com/articles/generating-an-ssh-key/](https://help.github.com/articles/generating-an-ssh-key/)
+
+			Essentially, you'll end up with two files inside your `~/.ssh`
+			folder, an `id_rsa` and `id_rsa.pub`. The one with .pub is the
+			public key, the other one is the private key.
+
+			**PROTECT YOUR PRIVATE KEY**. As the name key infers, it can be used
+			to log in *as you* to any machine that has the matching public key,
+			so don't give it to anybody.
+
+			If you really want to share access to a server, tell the other
+			person to generate their own ssh key pair and add their public key
+			to the server as a specific user. That way, you can still restrict
+			or remove their access to the machine in the future.
+
+			---
+
+			# Add the public key to a server
+
+			For this step, you'll need to actually copy your `rsa.pub` file to
+			the server you're accessing. You can use the following command to
+			copy the file to the server:
+
+			`scp ~/.ssh/id_rsa.pub me@my.server.com:~/.ssh/`
+
+			You'll need to manually enter your password for this, and you're
+			still not done. You need to add the contents of that public key
+			file to a special "authorized keys" file. To do that, ssh into the
+			server, again manually entering your password (for the last time)
+			and cd to `~/.ssh`. Then run `cat id_rsa.pub >> authorized_keys`.
+
+			The double arrow means to "append" the key, so any existing public
+			keys in the file are not overwritten. From now on, when you ssh
+			with your user to that machine, you won't need to enter your
+			password (unless you specified a password when you generated the
+			key itself).
+
+			This also means that other programs that use the ssh protocol can
+			now auth as you to that server. So if you add a remote git repo
+			using the `git@github.com:you/your-project.git` format, you also
+			won't need to type your password for pushing (or pulling from
+			private repos).
+
+			---
+
+			# Set up SSH hostname aliases
+
+			So typing out `ssh nickm@shell.csh.rit.edu` every time I want to
+			log onto ADA is a real pain. You can use the `~/.ssh/config` file
+			to define shorthand host names.
+
+			```bash
+			# ~/.ssh/config
+
+			Host csh
+				Hostname shell.csh.rit.edu
+				User nickm
+			```
+
+			Now I can simply run `ssh csh` and, in combination with the SSH
+			keys I've put in place, be immediately logged into ADA.
+
+			---
+
+			# Managing configurations
+
+			Since the beginning of the presentation, we've now added several
+			configuration files for various purposes, such as .bashrc or
+			.zshrc, .alias, .path, .ssh/config, maybe you've customized tmux
+			with .tmux.conf, or you're a heavy vim user with your prized
+			.vimrc. When you move to another machine it can be a real pain to
+			set that all up again. The way I do it is by using a slight hack
+			with git, something I found
+			[on hacker news](https://news.ycombinator.com/item?id=11070797).
+
+			The technique involves setting up a git repository to manage all of
+			the "dotfiles". The `.git` repo folder can't go into your home
+			folder, since it would overshadow every other git repo in any
+			subdirectory. Instead, we use an alias trick to put the repo folder
+			in a side directory, such as ~/.dotfiles.
+
+			---
+
+			# Git for dotfile management
+
+			First init a git repo using `git init --bare ~/.dotfiles`
+
+			Then we use an alias to specify separate repo and work-tree
+			directories.
+
+			`alias dot="git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME"`
+
+			Finally, tell git to ignore every file unless we specifically ask
+			it to track them, using `dot config status.showUntrackedFiles no`.
+
+			Now we can use the alias `dot` exactly as we would use `git`, and
+			manage the dotfiles. For example:
+
+			```bash
+			dot add .bashrc .zshrc .alias .path .tmux.conf .vimrc
+			dot commit -m "Added initial dotfiles"
+			dot push origin master
+			```
+
+			---
+
+			# Deploying dotfiles to a new machine
+
+			This git paradigm is mostly backwards from the standard usage flow.
+			To get the dotfiles onto a new machine, we use
+			`git clone --bare ~/.dotfiles`. Now, we manually add the alias from
+			before to enable the `dot` command. This is where things reverse.
+
+			Typically, we use git to save changes from the Working Directory
+			as a new commit. In this case, we use commits to "unload" file
+			state *into* the working directory (in this case, the homedir).
+
+			All we have to do is say `dot checkout -f master`. Be careful,
+			doing this will make git overwrite any files in the working
+			directory that don't exactly match them in th repo.
+
+		</textarea>
+		<script src="assets/remark-latest.min.js"></script>
+		<script>
+			var slideshow = remark.create();
+		</script>
+	</body>
+</html>
